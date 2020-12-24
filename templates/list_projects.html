@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% load myfilter %}
+{% block breadcrumbs %}
+    {% breadcrumb '项目列表' 'list_p' %}
+    {% render_breadcrumbs %}
+{% endblock %}
+{% block content %}
+    <h2>项目列表</h2>
+    <a class="btn btn-success" href={% url 'add_p' %}>新增项目</a>
+    <div class="table-responsive">
+        <table class="table table-striped fix">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>项目名称</th>
+                    <th>项目描述</th>
+                    <th>接口数量</th>
+                    <th>通过率</th>
+                    <th>起始时间</th>
+                    <th>完结时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in gene %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ data.project_name }}</td>
+                        <td>{{ data.comment|truncatechars:"20" }}</td>
+                        <td style='text-align: center;'>
+                            {{ count_testcases|fu:data.id }}
+                        </td>
+                        <td style='text-align: center;'>
+                            {% if pass_rate|fu:data.id %}
+                                {{ pass_rate|fu:data.id }}
+                            {% else %}
+                                --
+                            {% endif %}
+                        </td>
+                        <td>{{ data.start_time|date:'Y-m-d' }}</td>
+                        <td>{{ data.end_time|date:'Y-m-d' }}</td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" href={% url 'edit_p' data.id %}>编辑</a>
+                            <a class="btn btn-danger btn-sm" href={% url 'del_p' data.id %}>删除</a>
+                            <a class="btn btn-success btn-sm" href={% url 'add_api' data.id %}>新增用例</a>
+                            <a class="btn btn-primary btn-sm" href={% url 'list_api' data.id %}>查看用例</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

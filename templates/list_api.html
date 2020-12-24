@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {% breadcrumb '项目列表' 'list_p' %}
+    {% breadcrumb proj_dic.project_name 'list_api' %}
+    {% render_breadcrumbs %}
+{% endblock %}
+{% block content %}
+    <h2>{{ proj_dic.project_name }}的接口列表</h2>
+    <a class="btn btn-success" href={% url 'add_api' proj_dic.id %}>新增接口</a>
+    <div class="table-responsive">
+        <table class="table table-striped fix">
+            <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>序号</th>
+                    <th>接口名称</th>
+                    <th>接口描述</th>
+                    <th>接口地址</th>
+                    <th>请求方法</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in gene %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" value="{{ data.id }}">
+                        </td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ data.api_name }}</td>
+                        <td>{{ data.api_desc|truncatechars:"10" }}</td>
+                        <td>{{ data.api_url|truncatechars:"60" }}</td>
+                        <td>
+                            {% if data.api_method == '0' %}
+                                get
+                            {% elif data.api_method == '1' %}
+                                post
+                            {% elif data.api_method == '2' %}
+                                put
+                            {% elif data.api_method == '3' %}
+                                delete
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" href={% url 'edit_api' data.id %}>编辑</a>
+                            <a class="btn btn-danger btn-sm" href={% url 'del_api' data.id %}>删除</a>
+                            <a class="btn btn-success btn-sm" href={% url 'run_api' data.id %}>执行</a>
+                            <a class="btn btn-primary btn-sm" href={% url 'details_api' data.id %}>查看详情</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

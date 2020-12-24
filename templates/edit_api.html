@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {% breadcrumb '项目列表' 'list_p' %}
+    {% breadcrumb proj_name 'list_p' %}
+    {% breadcrumb '编辑接口' 'edit_app' %}
+    {% render_breadcrumbs %}
+{% endblock %}
+{% block content %}
+<h2 class="sub-header">编辑接口</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form_obj.non_field_errors }}
+    {%  for form in form_obj %}
+        <div class="fieldWrapper">
+        {{ form.label_tag }}
+{#        <lable for="{{ form.id_for_label }}">{{ form.label }}:</lable>#}
+        {{ form }}
+        {% if form.errors %}
+            <ul>
+            {% for error in form.errors %}
+                <li style="color: #ff212b"><strong>{{ error|escape }}</strong></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <input class="btn btn-success btn-sm" type="submit" value="提交">
+</form>
+
+
+{%  endblock %}
